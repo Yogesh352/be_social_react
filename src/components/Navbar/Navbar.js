@@ -1,7 +1,8 @@
 import { useState } from "react";
 import Link from "next/link";
+import SearchBar from "./SearchBar";
 
-import { styled, useTheme } from "@mui/material/styles";
+import { styled } from "@mui/material/styles";
 import Box from "@mui/material/Box";
 import Grid from "@material-ui/core/Grid";
 import Drawer from "@mui/material/Drawer";
@@ -19,6 +20,7 @@ import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
 import MenuItem from "@mui/material/MenuItem";
 import Menu from "@mui/material/Menu";
+import Badge from "@mui/material/Badge";
 
 import {
   ChatIcon,
@@ -27,6 +29,7 @@ import {
   AccountIcon,
   MenuIcon,
   LeftIcon,
+  NotificationIcon
 } from "../Icons/index";
 
 const drawerWidth = 240;
@@ -75,9 +78,7 @@ const DrawerHeader = styled("div")(({ theme }) => ({
   ...theme.mixins.toolbar,
   justifyContent: "flex-end",
 }));
-
 export default function Navbar() {
-  const theme = useTheme();
   const [open, setOpen] = useState(false);
   const [auth, setAuth] = useState(true);
   const [anchorEl, setAnchorEl] = useState(null);
@@ -126,11 +127,24 @@ export default function Navbar() {
             justifyContent="space-between"
             alignItems="center"
           >
-            <Typography variant="h6" noWrap component="div">
-              Main
-            </Typography>
+            <Stack direction="row" spacing={1}>
+              <Stack direction="row" spacing={1} padding = {1}>
+                <UsersIcon color="blue" size={28} />
+                <Typography variant ="subtitle1" color="blue">BeSocial</Typography>
+              </Stack>
+              <SearchBar />
+            </Stack>
             {auth ? (
               <div>
+                <IconButton
+                  size="large"
+                  aria-label="show 17 new notifications"
+                  color="inherit"
+                >
+                  <Badge badgeContent={17} color="error">
+                    <NotificationIcon />
+                  </Badge>
+                </IconButton>
                 <IconButton
                   size="large"
                   aria-label="account of current user"
@@ -180,20 +194,9 @@ export default function Navbar() {
         open={open}
       >
         <DrawerHeader>
-          <Grid
-            container
-            direction="row"
-            justifyContent="space-between"
-            alignItems="center"
-          >
-            <Stack direction="row" spacing={1}>
-              <UsersIcon color="blue" size={20} />
-              <Typography color="blue">BeSocial</Typography>
-            </Stack>
-            <IconButton onClick={handleDrawerClose}>
-              <LeftIcon />
-            </IconButton>
-          </Grid>
+          <IconButton onClick={handleDrawerClose}>
+            <LeftIcon />
+          </IconButton>
         </DrawerHeader>
         <Divider />
         <List>
