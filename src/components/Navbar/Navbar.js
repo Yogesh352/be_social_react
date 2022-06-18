@@ -1,6 +1,7 @@
-import * as React from "react";
-import { styled, useTheme } from "@mui/material/styles";
+import { useState } from "react";
 import Link from "next/link";
+
+import { styled, useTheme } from "@mui/material/styles";
 import Box from "@mui/material/Box";
 import Grid from "@material-ui/core/Grid";
 import Drawer from "@mui/material/Drawer";
@@ -12,14 +13,21 @@ import Typography from "@mui/material/Typography";
 import Stack from "@mui/material/Stack";
 import Divider from "@mui/material/Divider";
 import IconButton from "@mui/material/IconButton";
-import MenuIcon from "@mui/icons-material/Menu";
-import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
-import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 import ListItem from "@mui/material/ListItem";
 import ListItemButton from "@mui/material/ListItemButton";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
-import { ChatIcon, HomeIcon, UsersIcon } from "../Icons/index";
+import MenuItem from "@mui/material/MenuItem";
+import Menu from "@mui/material/Menu";
+
+import {
+  ChatIcon,
+  HomeIcon,
+  UsersIcon,
+  AccountIcon,
+  MenuIcon,
+  LeftIcon,
+} from "../Icons/index";
 
 const drawerWidth = 240;
 
@@ -70,7 +78,9 @@ const DrawerHeader = styled("div")(({ theme }) => ({
 
 export default function Navbar() {
   const theme = useTheme();
-  const [open, setOpen] = React.useState(false);
+  const [open, setOpen] = useState(false);
+  const [auth, setAuth] = useState(true);
+  const [anchorEl, setAnchorEl] = useState(null);
 
   const handleDrawerOpen = () => {
     setOpen(true);
@@ -80,10 +90,26 @@ export default function Navbar() {
     setOpen(false);
   };
 
+  const handleMenu = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+
+  const logoutClick = () => {
+    setAuth(false);
+  };
+
+  const loginClick = () => {
+    setAuth(true);
+    handleClose();
+  };
   return (
-    <Box sx={{ display: "flex" }}>
+    <Box sx={{ flexGrow: 1 }}>
       <CssBaseline />
-      <AppBar position="fixed" open={open}>
+      <AppBar color="inherit" position="fixed" open={open}>
         <Toolbar>
           <IconButton
             color="inherit"
@@ -94,9 +120,50 @@ export default function Navbar() {
           >
             <MenuIcon />
           </IconButton>
-          <Typography variant="h6" noWrap component="div">
-            Main
-          </Typography>
+          <Grid
+            container
+            direction="row"
+            justifyContent="space-between"
+            alignItems="center"
+          >
+            <Typography variant="h6" noWrap component="div">
+              Main
+            </Typography>
+            {auth ? (
+              <div>
+                <IconButton
+                  size="large"
+                  aria-label="account of current user"
+                  aria-controls="menu-appbar"
+                  aria-haspopup="true"
+                  onClick={handleMenu}
+                  color="inherit"
+                >
+                  <AccountIcon />
+                </IconButton>
+                <Menu
+                  id="menu-appbar"
+                  anchorEl={anchorEl}
+                  anchorOrigin={{
+                    vertical: "top",
+                    horizontal: "right",
+                  }}
+                  keepMounted
+                  transformOrigin={{
+                    vertical: "top",
+                    horizontal: "right",
+                  }}
+                  open={Boolean(anchorEl)}
+                  onClose={handleClose}
+                >
+                  <MenuItem onClick={handleClose}>Profile</MenuItem>
+                  <MenuItem onClick={logoutClick}>Log Out</MenuItem>
+                </Menu>
+              </div>
+            ) : (
+              <Typography onClick={loginClick}> Login </Typography>
+            )}
+          </Grid>
         </Toolbar>
       </AppBar>
       <Drawer
@@ -119,16 +186,12 @@ export default function Navbar() {
             justifyContent="space-between"
             alignItems="center"
           >
-            <Stack direction="row" spacing={2}>
+            <Stack direction="row" spacing={1}>
               <UsersIcon color="blue" size={20} />
-              <Typography>{"  " + "BeSocial"}</Typography>
+              <Typography color="blue">BeSocial</Typography>
             </Stack>
             <IconButton onClick={handleDrawerClose}>
-              {theme.direction === "ltr" ? (
-                <ChevronLeftIcon />
-              ) : (
-                <ChevronRightIcon />
-              )}
+              <LeftIcon />
             </IconButton>
           </Grid>
         </DrawerHeader>

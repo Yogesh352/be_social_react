@@ -18,15 +18,18 @@ import {
   HiOutlineQuestionMarkCircle,
   HiOutlineTemplate,
   HiOutlineUserGroup,
+  HiOutlineUserCircle,
   HiOutlineUsers,
   HiOutlineXCircle,
   HiChat, 
+  HiMenu,
   HiHome
 } from 'react-icons/hi'
 
 export const DashboardIcon = HiOutlineTemplate
 export const UserIcon = HiOutlineUserGroup
 export const UsersIcon = HiOutlineUsers
+export const AccountIcon = HiOutlineUserCircle
 export const NotificationIcon = HiOutlineBell
 export const CrossIcon = FiX
 export const FilterIcon = HiOutlineFilter
@@ -44,3 +47,4 @@ export const LeftIcon = FiChevronLeft
 export const RightIcon = FiChevronRight
 export const ChatIcon = HiChat
 export const HomeIcon = HiHome
+export const MenuIcon = HiMenu
