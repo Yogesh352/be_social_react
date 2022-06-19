@@ -1,7 +1,8 @@
-import { useState } from "react";
+import { useContext } from "react";
 import Link from "next/link";
 import SearchBar from "./SearchBar";
-import Authorisation from "../Authorisation/Authorisation"
+import Authorisation from "../Authorisation/Authorisation";
+import { NavbarContext } from "../Layout/Layout";
 
 import { styled } from "@mui/material/styles";
 import Box from "@mui/material/Box";
@@ -74,8 +75,8 @@ const DrawerHeader = styled("div")(({ theme }) => ({
   ...theme.mixins.toolbar,
   justifyContent: "flex-end",
 }));
-export default function Navbar() {
-  const [open, setOpen] = useState(false);
+export default function Navbar(props) {
+  const { open, setOpen } = useContext(NavbarContext);
 
   const handleDrawerOpen = () => {
     setOpen(true);
@@ -106,13 +107,15 @@ export default function Navbar() {
             alignItems="center"
           >
             <Stack direction="row" spacing={1}>
-              <Stack direction="row" spacing={1} padding = {1}>
+              <Stack direction="row" spacing={1} padding={1}>
                 <UsersIcon color="blue" size={28} />
-                <Typography variant ="subtitle1" color="blue">BeSocial</Typography>
+                <Typography variant="subtitle1" color="blue">
+                  BeSocial
+                </Typography>
               </Stack>
               <SearchBar />
             </Stack>
-            <Authorisation/>
+            <Authorisation />
           </Grid>
         </Toolbar>
       </AppBar>
