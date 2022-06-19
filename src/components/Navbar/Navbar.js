@@ -1,6 +1,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import SearchBar from "./SearchBar";
+import Authorisation from "../Authorisation/Authorisation"
 
 import { styled } from "@mui/material/styles";
 import Box from "@mui/material/Box";
@@ -18,18 +19,13 @@ import ListItem from "@mui/material/ListItem";
 import ListItemButton from "@mui/material/ListItemButton";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
-import MenuItem from "@mui/material/MenuItem";
-import Menu from "@mui/material/Menu";
-import Badge from "@mui/material/Badge";
 
 import {
   ChatIcon,
   HomeIcon,
   UsersIcon,
-  AccountIcon,
   MenuIcon,
   LeftIcon,
-  NotificationIcon
 } from "../Icons/index";
 
 const drawerWidth = 240;
@@ -80,8 +76,6 @@ const DrawerHeader = styled("div")(({ theme }) => ({
 }));
 export default function Navbar() {
   const [open, setOpen] = useState(false);
-  const [auth, setAuth] = useState(true);
-  const [anchorEl, setAnchorEl] = useState(null);
 
   const handleDrawerOpen = () => {
     setOpen(true);
@@ -91,22 +85,6 @@ export default function Navbar() {
     setOpen(false);
   };
 
-  const handleMenu = (event) => {
-    setAnchorEl(event.currentTarget);
-  };
-
-  const handleClose = () => {
-    setAnchorEl(null);
-  };
-
-  const logoutClick = () => {
-    setAuth(false);
-  };
-
-  const loginClick = () => {
-    setAuth(true);
-    handleClose();
-  };
   return (
     <Box sx={{ flexGrow: 1 }}>
       <CssBaseline />
@@ -134,49 +112,7 @@ export default function Navbar() {
               </Stack>
               <SearchBar />
             </Stack>
-            {auth ? (
-              <div>
-                <IconButton
-                  size="large"
-                  aria-label="show 17 new notifications"
-                  color="inherit"
-                >
-                  <Badge badgeContent={17} color="error">
-                    <NotificationIcon />
-                  </Badge>
-                </IconButton>
-                <IconButton
-                  size="large"
-                  aria-label="account of current user"
-                  aria-controls="menu-appbar"
-                  aria-haspopup="true"
-                  onClick={handleMenu}
-                  color="inherit"
-                >
-                  <AccountIcon />
-                </IconButton>
-                <Menu
-                  id="menu-appbar"
-                  anchorEl={anchorEl}
-                  anchorOrigin={{
-                    vertical: "top",
-                    horizontal: "right",
-                  }}
-                  keepMounted
-                  transformOrigin={{
-                    vertical: "top",
-                    horizontal: "right",
-                  }}
-                  open={Boolean(anchorEl)}
-                  onClose={handleClose}
-                >
-                  <MenuItem onClick={handleClose}>Profile</MenuItem>
-                  <MenuItem onClick={logoutClick}>Log Out</MenuItem>
-                </Menu>
-              </div>
-            ) : (
-              <Typography onClick={loginClick}> Login </Typography>
-            )}
+            <Authorisation/>
           </Grid>
         </Toolbar>
       </AppBar>
