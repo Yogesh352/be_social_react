@@ -1,6 +1,7 @@
 import { Button, Typography, Stack } from "@mui/material";
 import { TextInput } from "@mantine/core";
 import useInput from "../../hooks/use-input";
+import Link from "next/link";
 
 const LoginForm = () => {
   const {
@@ -10,7 +11,15 @@ const LoginForm = () => {
     valueChangeHandler: emailChangeHandler,
     inputBlurHandler: emailInputBlurHandler,
     reset: emailReset,
-  } = useInput((value) => value.trim() !== "" && value.includes("@"));
+  } = useInput(
+    (value) =>
+      value.trim() !== "" &&
+      value
+        .toLowerCase()
+        .match(
+          /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+        )
+  );
 
   const {
     value: enteredPassword,
@@ -38,33 +47,35 @@ const LoginForm = () => {
   return (
     <form onSubmit={formSubmitHandler}>
       <Stack spacing={2}>
-          <TextInput
-            required
-            placeholder="Enter Email"
-            label="Email"
-            type="email"
-            style={{ width: 500 }}
-            value={enteredEmail}
-            onChange={emailChangeHandler}
-            onBlur={emailInputBlurHandler}
-            error={emailHasError}
-          />
-          <TextInput
-            required
-            placeholder="Enter Password"
-            label="Password"
-            type="password"
-            style={{ width: 500 }}
-            value={enteredPassword}
-            onChange={passwordChangeHandler}
-            onBlur={passwordInputBlurHandler}
-            error={passwordHasError}
-          />
+        <TextInput
+          required
+          placeholder="Enter Email"
+          label="Email"
+          type="email"
+          style={{ width: 500 }}
+          value={enteredEmail}
+          onChange={emailChangeHandler}
+          onBlur={emailInputBlurHandler}
+          error={emailHasError}
+        />
+        <TextInput
+          required
+          placeholder="Enter Password"
+          label="Password"
+          type="password"
+          style={{ width: 500 }}
+          value={enteredPassword}
+          onChange={passwordChangeHandler}
+          onBlur={passwordInputBlurHandler}
+          error={passwordHasError}
+        />
         <div>
-          <Button size="small" variant="contained" disabled={!formIsValid}>
-            {" "}
-            Login{" "}
-          </Button>
+          <Link href="/dashboard">
+            <Button size="small" variant="contained" disabled={!formIsValid}>
+              {" "}
+              Login{" "}
+            </Button>
+          </Link>
         </div>
       </Stack>
     </form>

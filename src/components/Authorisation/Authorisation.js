@@ -1,10 +1,11 @@
 import { useState } from "react";
+import Link from "next/link";
 
 import IconButton from "@mui/material/IconButton";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import Badge from "@mui/material/Badge";
-import Button from '@mui/material/Button';
+import Button from "@mui/material/Button";
 
 import { AccountIcon, NotificationIcon } from "../Icons/index";
 const Authorisation = () => {
@@ -67,11 +68,13 @@ const Authorisation = () => {
             onClose={handleClose}
           >
             <MenuItem onClick={handleClose}>Profile</MenuItem>
-            <MenuItem onClick={logoutClick}>Log Out</MenuItem>
+            <Link href="/login">
+              <MenuItem onClick={logoutClick}>Log Out</MenuItem>
+            </Link>
           </Menu>
         </div>
       ) : (
-        <Button variant="outlined" onClick={loginClick}> Login </Button>
+        null
       )}
     </>
   );
