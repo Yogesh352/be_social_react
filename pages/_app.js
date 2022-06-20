@@ -4,7 +4,9 @@ import { useRouter } from "next/router";
 
 function MyApp({ Component, pageProps }) {
   const router = useRouter();
-  const showLayout = router.pathname === "/login" ? false : true;
+  const excludedRoutes = ['/login', '/']
+  const showLayout = excludedRoutes.includes(router.pathname) ? false : true;
+  console.log(router.pathname);
   return showLayout ? (
     <Layout>
       <Component {...pageProps} />
