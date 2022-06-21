@@ -1,3 +1,12 @@
+import React, { useRef, useState } from 'react';
+import styles from '../styles/Chat.module.css';
+import Navbar from "../src/components/Navbar/Navbar";
+
+import { styled } from '@mui/material/styles';
+import Box from '@mui/material/Box';
+import Paper from '@mui/material/Paper';
+import Grid from '@mui/material/Grid';
+=======
 import React, { useRef, useState } from "react";
 
 import firebase from "firebase/compat/app";
@@ -20,119 +29,48 @@ firebase.initializeApp({
 
 const auth = firebase.auth();
 const firestore = firebase.firestore();
-// const analytics = firebase.analytics();
 
 function App() {
-  // determine if user is logged in (determines whether to show chat room or not)
-  const [user] = useAuthState(auth);
+    // determine if user is logged in (determines whether to show chat room or not)
+    const [user] = useAuthState(auth);
 
-  return (
-      <div className="App">
-        <header>
-          <h1>⚛️🔥💬</h1>
-          <SignOut />
-        </header>
+    const dummy = useRef();
+    const messagesRef = firestore.collection('messages');
+    const query = messagesRef.orderBy('createdAt').limit(25);
 
-        <section>{user ? <ChatRoom /> : <SignIn />}</section>
+    const [messages] = useCollectionData(query, { idField: 'id' });
+    const [chatIdx, setChatIdx] = useState(0);
+
+    const [formValue, setFormValue] = useState('');
+  
+    return (
+      <div className={styles.App}>
+        <Navbar />
+
+        <Grid container spacing={0} alignItems="center" justifyContent="center">
+          <Grid item xs={2}>
+            <Paper sx={{ height: 940 }}>
+              <Grid direction="row">
+                <h1 className={styles.chatHeading}> Chat </h1>
+              </Grid>
+            </Paper>
+          </Grid>
+          <Grid item xs={6}>
+            <Paper sx={{ height: 940 }}>
+            <Grid direction="row">
+                <img className={styles.profPic} src = {(messages == null) ? "" : messages[0].photoURL} />
+                <h1 className={styles.chatHeading}> {(messages == null) ? "" : messages[0].uid} </h1>
+              </Grid>
+          </Paper>
+          </Grid>
+        </Grid>
+  
+        <section>
+          {/* {user ? <ChatRoom /> : <SignIn />} */}
+        </section>
+
       </div>
-  );
-}
-
-function SignIn() {
-  const signInWithGoogle = () => {
-    const provider = new firebase.auth.GoogleAuthProvider();
-    auth.signInWithPopup(provider);
-  };
-
-  return (
-    <>
-      <button className="sign-in" onClick={signInWithGoogle}>
-        Sign in with Google
-      </button>
-      <p>
-        Do not violate the community guidelines or you will be banned for life!
-      </p>
-    </>
-  );
-}
-
-function SignOut() {
-  // if signed in => auth.currentUser is true
-  return (
-    auth.currentUser && (
-      <button className="sign-out" onClick={() => auth.signOut()}>
-        Sign Out
-      </button>
-    )
-  );
-}
-
-function ChatRoom() {
-  const dummy = useRef();
-  const messagesRef = firestore.collection("messages");
-  const query = messagesRef.orderBy("createdAt").limit(25);
-
-  const [messages] = useCollectionData(query, { idField: "id" });
-
-  const [formValue, setFormValue] = useState("");
-
-  const sendMessage = async (e) => {
-    e.preventDefault();
-
-    const { uid, photoURL } = auth.currentUser;
-
-    await messagesRef.add({
-      text: formValue,
-      createdAt: firebase.firestore.FieldValue.serverTimestamp(),
-      uid,
-      photoURL,
-    });
-
-    setFormValue("");
-    dummy.current.scrollIntoView({ behavior: "smooth" });
-  };
-
-  return (
-    <>
-      <main>
-        {messages &&
-          messages.map((msg) => <ChatMessage key={msg.id} message={msg} />)}
-
-        <span ref={dummy}></span>
-      </main>
-
-      <form onSubmit={sendMessage}>
-        <input
-          value={formValue}
-          onChange={(e) => setFormValue(e.target.value)}
-          placeholder="say something nice"
-        />
-
-        <button type="submit" disabled={!formValue}>
-          🕊️
-        </button>
-      </form>
-    </>
-  );
-}
-
-function ChatMessage(props) {
-  const { text, uid, photoURL } = props.message;
-
-  const messageClass = uid === auth.currentUser.uid ? "sent" : "received";
-
-  return (
-    <>
-      <div className={`message ${messageClass}`}>
-        <img
-          src={
-            photoURL || "https://api.adorable.io/avatars/23/abott@adorable.png"
-          }
-        />
-        <p>{text}</p>
-      </div>
-    </>
-  );
+    );
 }
 
 export default App;
