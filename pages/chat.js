@@ -31,66 +31,42 @@ const firestore = firebase.firestore();
 function App() {
     // determine if user is logged in (determines whether to show chat room or not)
     const [user] = useAuthState(auth);
+
+    const dummy = useRef();
+    const messagesRef = firestore.collection('messages');
+    const query = messagesRef.orderBy('createdAt').limit(25);
+
+    const [messages] = useCollectionData(query, { idField: 'id' });
+    const [chatIdx, setChatIdx] = useState(0);
+
+    const [formValue, setFormValue] = useState('');
   
     return (
       <div className={styles.App}>
         <Navbar />
 
-        <Grid
-          container
-          spacing={0}
-          direction="column"
-          alignItems="center"
-          justifyContent="center"
-        >
-          <Grid item direction="column">
-            <Paper
-                sx={{
-                  height: 940,
-                  width: 350,
-                }}
-              />
+        <Grid container spacing={0} alignItems="center" justifyContent="center">
+          <Grid item xs={2}>
+            <Paper sx={{ height: 940 }}>
+              <Grid direction="row">
+                <h1 className={styles.chatHeading}> Chat </h1>
+              </Grid>
+            </Paper>
           </Grid>
-          <Grid item xs={8}>
-            <Paper>xs=8</Paper>
+          <Grid item xs={6}>
+            <Paper sx={{ height: 940 }}>
+            <Grid direction="row">
+                <img className={styles.profPic} src = {(messages == null) ? "" : messages[0].photoURL} />
+                <h1 className={styles.chatHeading}> {(messages == null) ? "" : messages[0].uid} </h1>
+              </Grid>
+          </Paper>
           </Grid>
-          <Grid item xs={4}>
-            <Paper>xs=4</Paper>
-          </Grid>
-          {/* <Box 
-            sx={{
-              width: 940,
-              height: 950,
-              backgroundColor: 'white',
-            }}
-          >
-            <Grid
-              item
-              xs={2}
-              direction="column"
-            >
-              <Box className={styles.headerBox}>
-                <h1 className={styles.chatHeading}> My Chats </h1>
-              </Box>
-            </Grid>
-
-            <Grid
-              item
-              xs={4}
-              direction="column"
-            >
-              <Box className={styles.chatBox}>
-                <h1 className={styles.chatHeading}> Hello </h1>
-              </Box>
-            </Grid>
-
-          </Box> */}
         </Grid>
   
         <section>
           {/* {user ? <ChatRoom /> : <SignIn />} */}
         </section>
-  
+
       </div>
     );
 }

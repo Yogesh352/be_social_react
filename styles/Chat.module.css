@@ -9,30 +9,14 @@
   font-weight: 400;
   font-size: 18px;
   line-height: 155%;
-  margin: 20px
+  padding: 15px;
+  border-bottom: 1px solid #CED4DA;
 }
 
-.headerBox {
-  box-sizing: border-box;
-
-  /* position: absolute; */
-  width: 350px;
-  height: 65px;
-  /* left: 440px; */
-  /* top: 110px; */
-
-  border-bottom: 1px solid #CED4DA;
-  border-right: 1px solid #CED4DA;
-}
-
-.chatBox {
-  box-sizing: border-box;
-
-  /* position: absolute; */
-  width: 590px;
-  height: 65px;
-  /* left: 790px; */
-  /* top: 110px; */
-
-  border-bottom: 1px solid #CED4DA;
+.profPic {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  padding: 10px;
+  float: left;
 }
