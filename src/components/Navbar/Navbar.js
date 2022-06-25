@@ -34,7 +34,7 @@ const drawerWidth = 240;
 const Main = styled("main", { shouldForwardProp: (prop) => prop !== "open" })(
   ({ theme, open }) => ({
     flexGrow: 1,
-    padding: theme.spacing(3),
+    padding: theme.spacing(0),
     transition: theme.transitions.create("margin", {
       easing: theme.transitions.easing.sharp,
       duration: theme.transitions.duration.leavingScreen,
@@ -89,7 +89,7 @@ export default function Navbar(props) {
   return (
     <Box sx={{ flexGrow: 1 }}>
       <CssBaseline />
-      <AppBar color="inherit" position="fixed" open={open}>
+      <AppBar color="inherit" position="fixed" open={open} height="10px">
         <Toolbar>
           <IconButton
             color="inherit"

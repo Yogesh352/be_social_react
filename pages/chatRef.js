@@ -24,7 +24,7 @@ const firestore = firebase.firestore();
 // const analytics = firebase.analytics();
 
 
-function App() {
+function ChatRef() {
   // determine if user is logged in (determines whether to show chat room or not)
   const [user] = useAuthState(auth);
 
@@ -126,4 +126,4 @@ function ChatMessage(props) {
 }
 
 
-export default App;
+export default ChatRef;

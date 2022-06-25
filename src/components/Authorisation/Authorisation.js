@@ -62,7 +62,7 @@ const Authorisation = () => {
             keepMounted
             transformOrigin={{
               vertical: "top",
-              horizontal: "right",
+              horizontal: "right",  
             }}
             open={Boolean(anchorEl)}
             onClose={handleClose}

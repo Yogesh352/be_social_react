@@ -1,13 +1,9 @@
-import React, { useRef, useState } from 'react';
-import styles from '../styles/Chat.module.css';
-import Navbar from "../src/components/Navbar/Navbar";
-
-import { styled } from '@mui/material/styles';
-import Box from '@mui/material/Box';
-import Paper from '@mui/material/Paper';
-import Grid from '@mui/material/Grid';
-=======
 import React, { useRef, useState } from "react";
+import styles from "../styles/Chat.module.css";
+
+import Box from "@mui/material/Box";
+import Paper from "@mui/material/Paper";
+import Grid from "@mui/material/Grid";
 
 import firebase from "firebase/compat/app";
 import "firebase/compat/auth";
@@ -30,47 +26,50 @@ firebase.initializeApp({
 const auth = firebase.auth();
 const firestore = firebase.firestore();
 
-function App() {
-    // determine if user is logged in (determines whether to show chat room or not)
-    const [user] = useAuthState(auth);
+function Chat() {
+  // determine if user is logged in (determines whether to show chat room or not)
+  const [user] = useAuthState(auth);
 
-    const dummy = useRef();
-    const messagesRef = firestore.collection('messages');
-    const query = messagesRef.orderBy('createdAt').limit(25);
+  const dummy = useRef();
+  const messagesRef = firestore.collection("messages");
+  const query = messagesRef.orderBy("createdAt").limit(25);
 
-    const [messages] = useCollectionData(query, { idField: 'id' });
-    const [chatIdx, setChatIdx] = useState(0);
+  const [messages] = useCollectionData(query, { idField: "id" });
+  const [chatIdx, setChatIdx] = useState(0);
 
-    const [formValue, setFormValue] = useState('');
-  
-    return (
-      <div className={styles.App}>
-        <Navbar />
+  const [formValue, setFormValue] = useState("");
 
-        <Grid container spacing={0} alignItems="center" justifyContent="center">
-          <Grid item xs={2}>
-            <Paper sx={{ height: 940 }}>
-              <Grid direction="row">
-                <h1 className={styles.chatHeading}> Chat </h1>
-              </Grid>
-            </Paper>
-          </Grid>
-          <Grid item xs={6}>
-            <Paper sx={{ height: 940 }}>
+  return (
+    <>
+      <Grid
+        container
+        padding={4}
+        spacing={0}
+        alignItems="center"
+        justifyContent="center"
+      >
+        <Grid item xs={2}>
             <Grid direction="row">
-                <img className={styles.profPic} src = {(messages == null) ? "" : messages[0].photoURL} />
-                <h1 className={styles.chatHeading}> {(messages == null) ? "" : messages[0].uid} </h1>
-              </Grid>
-          </Paper>
-          </Grid>
+              <h1 className={styles.chatHeading}> Chat </h1>
+            </Grid>
         </Grid>
-  
-        <section>
-          {/* {user ? <ChatRoom /> : <SignIn />} */}
-        </section>
+        <Grid item xs={6}>
+            <Grid direction="row">
+              <img
+                className={styles.profPic}
+                src={messages == null ? "" : messages[0].photoURL}
+              />
+              <h1 className={styles.chatHeading}>
+                {" "}
+                {messages == null ? "" : messages[0].uid}{" "}
+              </h1>
+            </Grid>
+        </Grid>
+      </Grid>
 
-      </div>
-    );
+      <section>{/* {user ? <ChatRoom /> : <SignIn />} */}</section>
+    </>
+  );
 }
 
-export default App;
+export default Chat;

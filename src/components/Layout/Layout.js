@@ -9,19 +9,16 @@ const Layout = (props) => {
 
   return (
     <NavbarContext.Provider value={{ open, setOpen }}>
-      <Box>
-        <Box>
-          <Navbar />
-        </Box>
-        <Box
-          className="bg-gray-50 px-5 pb-5"
-          sx={{
-            minHeight: "calc(100vh)",
-            marginLeft: open ? 35: 10
-          }}
-        >
-          {props.children}
-        </Box>
+      <Navbar />
+      <Box
+        
+        className="bg-grey-100 px-5 pb-5 h-full w-full"
+        sx={{
+          minHeight: "calc(100vh)",
+          marginLeft: open ? 25 : 0,
+        }}
+      >
+        {props.children}
       </Box>
     </NavbarContext.Provider>
   );
