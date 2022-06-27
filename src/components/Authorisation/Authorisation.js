@@ -1,16 +1,25 @@
 import { useState } from "react";
 import Link from "next/link";
 
+import { signOut } from "firebase/auth";
+import { updateDoc, doc } from "firebase/firestore";
+
+import { auth, db } from "../../authentication/firebase";
 import IconButton from "@mui/material/IconButton";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import Badge from "@mui/material/Badge";
-import Button from "@mui/material/Button";
 
 import { AccountIcon, NotificationIcon } from "../Icons/index";
 const Authorisation = () => {
-  const [auth, setAuth] = useState(true);
   const [anchorEl, setAnchorEl] = useState(null);
+
+  const handleSignOut = async () => {
+    await updateDoc(doc(db, "users", auth.currentUser.uid), {
+      isOnline: false,
+    });
+    await signOut(auth);
+  };
 
   const handleMenu = (event) => {
     setAnchorEl(event.currentTarget);
@@ -62,20 +71,20 @@ const Authorisation = () => {
             keepMounted
             transformOrigin={{
               vertical: "top",
-              horizontal: "right",  
+              horizontal: "right",
             }}
             open={Boolean(anchorEl)}
             onClose={handleClose}
           >
-            <MenuItem onClick={handleClose}>Profile</MenuItem>
+            <Link href="/profile">
+              <MenuItem onClick={handleClose}>Profile</MenuItem>
+            </Link>
             <Link href="/login">
-              <MenuItem onClick={logoutClick}>Log Out</MenuItem>
+              <MenuItem onClick={handleSignOut}>Log Out</MenuItem>
             </Link>
           </Menu>
         </div>
-      ) : (
-        null
-      )}
+      ) : null}
     </>
   );
 };

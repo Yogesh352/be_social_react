@@ -1,75 +1,191 @@
-import React, { useRef, useState } from "react";
-import styles from "../styles/Chat.module.css";
+import React, { useEffect, useState, useContext, useRef } from "react";
+import { db, auth, storage } from "../src/authentication/firebase";
+import {
+  collection,
+  query,
+  where,
+  onSnapshot,
+  addDoc,
+  Timestamp,
+  orderBy,
+  setDoc,
+  doc,
+  getDoc,
+  updateDoc,
+} from "firebase/firestore";
+import {
+  ref,
+  getDownloadURL,
+  uploadBytes,
+  deleteObject,
+} from "firebase/storage";
+import { Grid, Stack, Typography, Divider, Box } from "@mui/material";
+import User from "../src/components/Users/User";
+import MessageForm from "../src/components/Message/MessageForm";
+import Message from "../src/components/Message/Message";
+import { NavbarContext } from "../src/components/Layout/Layout";
 
-import Box from "@mui/material/Box";
-import Paper from "@mui/material/Paper";
-import Grid from "@mui/material/Grid";
+const Chat = () => {
+  const [users, setUsers] = useState([]);
+  const [chat, setChat] = useState("");
+  const [text, setText] = useState("");
+  const [img, setImg] = useState("");
+  const [msgs, setMsgs] = useState([]);
+  const { open } = useContext(NavbarContext);
 
-import firebase from "firebase/compat/app";
-import "firebase/compat/auth";
-import "firebase/compat/firestore";
-import "firebase/analytics";
+  const loggedInUser = auth.currentUser.uid;
 
-import { useAuthState } from "react-firebase-hooks/auth";
-import { useCollectionData } from "react-firebase-hooks/firestore";
+  useEffect(() => {
+    const usersRef = collection(db, "users");
+    const q = query(usersRef, where("uid", "not-in", [loggedInUser]));
+    const unsub = onSnapshot(q, (querySnapshot) => {
+      let users = [];
+      querySnapshot.forEach((doc) => {
+        users.push(doc.data());
+      });
+      setUsers(users);
+    });
+    return () => unsub();
+  }, []);
 
-firebase.initializeApp({
-  apiKey: "AIzaSyBu7Ukf1PPI7Pz1ksOIUsHV8HLAbKWqx6Y",
-  authDomain: "chat-app-bccf3.firebaseapp.com",
-  projectId: "chat-app-bccf3",
-  storageBucket: "chat-app-bccf3.appspot.com",
-  messagingSenderId: "824447302866",
-  appId: "1:824447302866:web:acbb1fd620920bd006810b",
-  measurementId: "G-R8K9VRP07B",
-});
+  const selectUser = async (user) => {
+    setChat(user);
 
-const auth = firebase.auth();
-const firestore = firebase.firestore();
+    const user2 = user.uid;
+    const id =
+      loggedInUser > user2
+        ? `${loggedInUser + user2}`
+        : `${user2 + loggedInUser}`;
 
-function Chat() {
-  // determine if user is logged in (determines whether to show chat room or not)
-  const [user] = useAuthState(auth);
+    const msgsRef = collection(db, "messages", id, "chat");
+    const q = query(msgsRef, orderBy("createdAt", "asc"));
 
-  const dummy = useRef();
-  const messagesRef = firestore.collection("messages");
-  const query = messagesRef.orderBy("createdAt").limit(25);
+    onSnapshot(q, (querySnapshot) => {
+      let msgs = [];
+      querySnapshot.forEach((doc) => {
+        msgs.push(doc.data());
+      });
+      setMsgs(msgs);
+    });
 
-  const [messages] = useCollectionData(query, { idField: "id" });
-  const [chatIdx, setChatIdx] = useState(0);
+    const docSnap = await getDoc(doc(db, "lastMsg", id));
+    if (docSnap.data() && docSnap.data().from !== loggedInUser) {
+      await updateDoc(doc(db, "lastMsg", id), {
+        unread: false,
+      });
+    }
+  };
 
-  const [formValue, setFormValue] = useState("");
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    const user2 = chat.uid;
+
+    const id =
+      loggedInUser > user2
+        ? `${loggedInUser + user2}`
+        : `${user2 + loggedInUser}`;
+
+    let url;
+    if (img) {
+      const imgRef = ref(
+        storage,
+        `images/${new Date().getTime()} - ${img.name}`
+      );
+      const snap = await uploadBytes(imgRef, img);
+      const dlUrl = await getDownloadURL(ref(storage, snap.ref.fullPath));
+      url = dlUrl;
+    }
+
+    await addDoc(collection(db, "messages", id, "chat"), {
+      text,
+      from: loggedInUser,
+      to: user2,
+      createdAt: Timestamp.fromDate(new Date()),
+      media: url || "",
+    });
+    await setDoc(doc(db, "lastMsg", id), {
+      text,
+      from: loggedInUser,
+      to: user2,
+      createdAt: Timestamp.fromDate(new Date()),
+      media: url || "",
+      unread: true,
+    });
+    setText("");
+  };
 
   return (
-    <>
-      <Grid
-        container
-        padding={4}
-        spacing={0}
-        alignItems="center"
-        justifyContent="center"
-      >
-        <Grid item xs={2}>
-            <Grid direction="row">
-              <h1 className={styles.chatHeading}> Chat </h1>
-            </Grid>
-        </Grid>
-        <Grid item xs={6}>
-            <Grid direction="row">
-              <img
-                className={styles.profPic}
-                src={messages == null ? "" : messages[0].photoURL}
-              />
-              <h1 className={styles.chatHeading}>
-                {" "}
-                {messages == null ? "" : messages[0].uid}{" "}
-              </h1>
-            </Grid>
-        </Grid>
+    <Grid
+      style={{
+        minWidth: open ? "60%" : "100%",
+        width: open? "88%": "100%",
+        height: "100vh",
+      }}
+      className="bg-white shadow-md justify-center"
+      container
+      spacing={2}
+    >
+      <Grid item md={4}>
+        <Stack className="w-full">
+          <Box className="px-8 py-2 font-bold text-lg border-b-2">Users</Box>
+          {users.map((user) => (
+            <User
+              key={user.uid}
+              user={user}
+              selectUser={selectUser}
+              loggedInUser={loggedInUser}
+              chat={chat}
+            />
+          ))}
+        </Stack>
       </Grid>
 
-      <section>{/* {user ? <ChatRoom /> : <SignIn />} */}</section>
-    </>
+      <Divider orientation="vertical" />
+
+      <Grid className="relative" item md={7.8}>
+        <Stack>
+          {chat ? (
+            <>
+              <Box className="px-8 py-2 font-bold text-lg border-b-2">
+                {chat.enteredName}
+              </Box>
+              <Stack spacing={5}>
+                <Box
+                  className="overflow-y-scroll p-4 space-y-4"
+                  style={{
+                    minWidth: "100%",
+                    height: "60vh",
+                  }}
+                >
+                  {msgs.length
+                    ? msgs.map((msg, i) => (
+                        <Message
+                          key={i}
+                          msg={msg}
+                          loggedInUser={loggedInUser}
+                        />
+                      ))
+                    : null}
+                </Box>
+                <MessageForm
+                  className="absolute bottom-0"
+                  handleSubmit={handleSubmit}
+                  text={text}
+                  setText={setText}
+                  setImg={setImg}
+                />
+              </Stack>
+            </>
+          ) : (
+            <Box className="px-8 py-2 font-bold text-lg border-b-2">
+              Select a Chat to Begin
+            </Box>
+          )}
+        </Stack>
+      </Grid>
+    </Grid>
   );
-}
+};
 
 export default Chat;

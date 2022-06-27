@@ -6,7 +6,9 @@ import {
   FiChevronLeft,
   FiChevronRight,
   FiUpload,
-  FiX
+  FiX,
+  FiCircle,
+  FiPaperclip
 } from 'react-icons/fi'
 import { GiMagnifyingGlass } from 'react-icons/gi'
 import {
@@ -14,7 +16,7 @@ import {
   HiOutlineFilter,
   HiOutlineLogout,
   HiOutlinePencil,
-  HiOutlinePlusCircle,
+  HiPlusCircle,
   HiOutlineQuestionMarkCircle,
   HiOutlineTemplate,
   HiOutlineUserGroup,
@@ -23,7 +25,9 @@ import {
   HiOutlineXCircle,
   HiChat, 
   HiMenu,
-  HiHome
+  HiHome,
+  HiCamera,
+  HiPaperClip
 } from 'react-icons/hi'
 
 export const DashboardIcon = HiOutlineTemplate
@@ -33,7 +37,7 @@ export const AccountIcon = HiOutlineUserCircle
 export const NotificationIcon = HiOutlineBell
 export const CrossIcon = FiX
 export const FilterIcon = HiOutlineFilter
-export const AdditionIcon = HiOutlinePlusCircle
+export const AdditionIcon = HiPlusCircle
 export const EditIcon = HiOutlinePencil
 export const DeleteIcon = HiOutlineXCircle
 export const LogoutIcon = HiOutlineLogout
@@ -48,3 +52,6 @@ export const RightIcon = FiChevronRight
 export const ChatIcon = HiChat
 export const HomeIcon = HiHome
 export const MenuIcon = HiMenu
+export const CameraIcon =  HiCamera
+export const CircleIcon = FiCircle
+export const AttachmentIcon = HiPaperClip

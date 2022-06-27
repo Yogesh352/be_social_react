@@ -1,20 +1,25 @@
 import Layout from "../src/components/Layout/Layout";
 import "../styles/globals.css";
 import { useRouter } from "next/router";
+import AuthProvider from "../src/context/auth";
+import PrivateRoute from "../HOC/PrivateRoute/PrivateRoute";
 
 function MyApp({ Component, pageProps }) {
   const router = useRouter();
-  const excludedRoutes = ['/login', '/']
+  const excludedRoutes = ["/login", "/", "/register"];
   const showLayout = excludedRoutes.includes(router.pathname) ? false : true;
-  console.log(router.pathname);
   return showLayout ? (
-    <Layout>
-      <Component {...pageProps} />
-    </Layout>
+    <AuthProvider>
+        <Layout>
+          <Component {...pageProps} />
+        </Layout>
+    
+    </AuthProvider>
   ) : (
-    <Component {...pageProps} />
+    <AuthProvider>
+        <Component {...pageProps} />
+    </AuthProvider>
   );
 }
 
 export default MyApp;
-
