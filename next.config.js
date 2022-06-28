@@ -4,12 +4,15 @@ const nextConfig = {
 };
 
 module.exports = {
+  images: {
+    domains: ["firebasestorage.googleapis.com"],
+  },
   async rewrites() {
     return [
       {
-        source: '/about',
-        destination: '/',
+        source: "/login",
+        destination: "/",
       },
-    ]
+    ];
   },
-}
+};

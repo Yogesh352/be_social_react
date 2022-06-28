@@ -11,11 +11,11 @@ const Layout = (props) => {
     <NavbarContext.Provider value={{ open, setOpen }}>
       <Navbar />
       <Box
-        
-        className="bg-grey-100 px-5 pb-5 h-full w-full"
+        className="bg-grey-300 py- px-10 justify-center h-full w-full overflow-hidden"
         sx={{
-          minHeight: "calc(100vh)",
-          marginLeft: open ? 25 : 0,
+          height: "91vh",
+          width: "100%",
+          mx: open ? 25 : 0,
         }}
       >
         {props.children}

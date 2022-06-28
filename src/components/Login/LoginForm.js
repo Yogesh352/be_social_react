@@ -1,9 +1,24 @@
-import { Button, Typography, Stack } from "@mui/material";
+import { Button, Stack } from "@mui/material";
 import { TextInput } from "@mantine/core";
 import useInput from "../../hooks/use-input";
 import Link from "next/link";
+import { useRouter } from "next/router";
+import { useState } from "react";
+
+import { signInWithEmailAndPassword } from "@firebase/auth";
+import { doc, updateDoc } from "firebase/firestore";
+import { auth, db } from "../../authentication/firebase";
 
 const LoginForm = () => {
+  const router = useRouter();
+  const [data, setData] = useState({
+    enteredEmail: "",
+    enteredPassword: "",
+  });
+
+  const handleClick = () =>{ 
+    router.push("/dashboard")
+  }
   const {
     value: enteredEmail,
     isValid: emailIsValid,
@@ -35,10 +50,29 @@ const LoginForm = () => {
   if (emailIsValid && passwordIsValid) {
     formIsValid = true;
   }
-  const formSubmitHandler = (event) => {
+  const formSubmitHandler = async (event) => {
     event.preventDefault();
-    if (!firstNameIsValid && !emailIsValid && !secondNameIsValid) {
+    if (!emailIsValid && !passwordIsValid) {
       return;
+    }
+    setData({
+      enteredEmail: enteredEmail,
+      enteredPassword: enteredPassword,
+    });
+
+    try {
+      const result = await signInWithEmailAndPassword(
+        auth,
+        enteredEmail,
+        enteredPassword
+      );
+
+      await updateDoc(doc(db, "users", result.user.uid), {
+        isOnline: true,
+      });
+      setData({ email: "", password: "" });
+    } catch (err) {
+      console.log(err);
     }
     passwordReset();
     emailReset();
@@ -69,14 +103,15 @@ const LoginForm = () => {
           onBlur={passwordInputBlurHandler}
           error={passwordHasError}
         />
-        <div>
-          <Link href="/dashboard">
-            <Button size="small" variant="contained" disabled={!formIsValid}>
-              {" "}
-              Login{" "}
-            </Button>
+        <Stack spacing={2} direction="row">
+          <Button type = "submit" size="small" variant="contained" disabled={!formIsValid} onClick = {handleClick}>
+            Login
+          </Button>
+
+          <Link href="register">
+            <Button variant="outlined">Register</Button>
           </Link>
-        </div>
+        </Stack>
       </Stack>
     </form>
   );

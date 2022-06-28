@@ -3,6 +3,7 @@ import Link from "next/link";
 import SearchBar from "./SearchBar";
 import Authorisation from "../Authorisation/Authorisation";
 import { NavbarContext } from "../Layout/Layout";
+import { auth } from "../../authentication/firebase";
 
 import { styled } from "@mui/material/styles";
 import Box from "@mui/material/Box";
