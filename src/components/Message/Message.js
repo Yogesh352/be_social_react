@@ -10,6 +10,7 @@ const Message = ({ msg, loggedInUser }) => {
   useEffect(() => {
     scrollRef.current?.scrollIntoView({behavior : "smooth", block: 'nearest', inline: 'start'})
   }, [msg])
+  
   return (
     <div className="flow-root" ref ={scrollRef}>
       <Box className={format} >

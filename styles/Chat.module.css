@@ -4,6 +4,11 @@
   background-color: #CED4DA;
 }
 
+.usersBox {
+  background-color: white;
+  margin-top: 10px;
+}
+
 .chatHeading {
   font-family: "Poppins", san-serif;
   font-weight: 400;
