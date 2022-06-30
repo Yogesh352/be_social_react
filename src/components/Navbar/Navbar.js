@@ -90,8 +90,9 @@ export default function Navbar(props) {
   return (
     <Box sx={{ flexGrow: 1 }}>
       <CssBaseline />
+
       <AppBar color="inherit" position="fixed" open={open} height="10px">
-        <Toolbar>
+        <Toolbar className="w-6/12 self-center">
           <IconButton
             color="inherit"
             aria-label="open drawer"
@@ -120,6 +121,7 @@ export default function Navbar(props) {
           </Grid>
         </Toolbar>
       </AppBar>
+
       <Drawer
         sx={{
           width: drawerWidth,
@@ -162,6 +164,7 @@ export default function Navbar(props) {
           </ListItem>
         </List>
       </Drawer>
+      
       <Main open={open}>
         <DrawerHeader />
       </Main>

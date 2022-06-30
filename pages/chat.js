@@ -24,7 +24,6 @@ import User from "../src/components/Users/User";
 import MessageForm from "../src/components/Message/MessageForm";
 import Message from "../src/components/Message/Message";
 import { NavbarContext } from "../src/components/Layout/Layout";
-import Styles from "../styles/Chat.module.css";
 
 const Chat = () => {
   const [users, setUsers] = useState([]);
@@ -123,7 +122,7 @@ const Chat = () => {
         width: open? "88%": "100%",
         height: "100vh",
       }}
-      m={3}
+      mt={3}
       className="justify-center top-400"
       container
       spacing={2}
