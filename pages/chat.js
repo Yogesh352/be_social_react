@@ -122,32 +122,37 @@ const Chat = () => {
         width: open? "88%": "100%",
         height: "100vh",
       }}
-      className="bg-white shadow-md justify-center"
+      mt={3}
+      className="justify-center top-400"
       container
       spacing={2}
+      justifyContent="center"
     >
-      <Grid item md={4}>
+      
+      <Grid item md={2} className="bg-white max-h-screen drop-shadow">
         <Stack className="w-full">
-          <Box className="px-8 py-2 font-bold text-lg border-b-2">Users</Box>
-          {users.map((user) => (
-            <User
-              key={user.uid}
-              user={user}
-              selectUser={selectUser}
-              loggedInUser={loggedInUser}
-              chat={chat}
-            />
-          ))}
+          <Box>
+            <h1 className="font-sans px-8 py-2 text-lg border-b-2"> Users </h1>
+            {users.map((user) => (
+              <User
+                key={user.uid}
+                user={user}
+                selectUser={selectUser}
+                loggedInUser={loggedInUser}
+                chat={chat}
+              />
+            ))}
+          </Box>
         </Stack>
       </Grid>
 
-      <Divider orientation="vertical" />
+      {/* <Divider orientation="vertical" /> */}
 
-      <Grid className="relative" item md={7.8}>
+      <Grid className="bg-white max-h-screen drop-shadow" item md={4}>
         <Stack>
           {chat ? (
             <>
-              <Box className="px-8 py-2 font-bold text-lg border-b-2">
+              <Box className="font-sans px-8 py-2 text-lg border-b-2">
                 {chat.enteredName}
               </Box>
               <Stack spacing={5}>
@@ -155,7 +160,7 @@ const Chat = () => {
                   className="overflow-y-scroll p-4 space-y-4"
                   style={{
                     minWidth: "100%",
-                    height: "60vh",
+                    height: "65vh",
                   }}
                 >
                   {msgs.length
@@ -178,7 +183,7 @@ const Chat = () => {
               </Stack>
             </>
           ) : (
-            <Box className="px-8 py-2 font-bold text-lg border-b-2">
+            <Box className="font-sans px-8 py-2 text-lg border-b-2">
               Select a Chat to Begin
             </Box>
           )}
